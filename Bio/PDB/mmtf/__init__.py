@@ -6,7 +6,7 @@
 # package.
 """Support for loading 3D structures stored in MMTF files."""
 try:
-    from mmtf import fetch, parse
+    from mmtf import fetch, parse, parse_gzip
 except ImportError:
     from Bio import MissingPythonDependencyError
     raise MissingPythonDependencyError("Install mmtf to use Bio.PDB.mmtf "
@@ -42,5 +42,8 @@ class MMTFParser(object):
         :return: the structure
 
         """
-        decoder = parse(file_path)
+        try:
+            decoder = parse(file_path)
+        except Exception:
+            decoder = parse_gzip(file_path)
         return get_from_decoded(decoder)
